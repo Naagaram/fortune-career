@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { CompanyCard } from "@/components/company-card";
-import { Badge, Button, Card, Input } from "@/components/ui";
 import { getRecentlyAdded, getTopCompanies } from "@/lib/companies";
+import { HeroSearch } from "@/components/hero-search";
 
 export const revalidate = 3600;
 
@@ -10,68 +9,130 @@ export default async function HomePage() {
   const [topIT, topManufacturing, recent] = await Promise.all([
     getTopCompanies("IT", 6),
     getTopCompanies("Manufacturing", 6),
-    getRecentlyAdded(6)
+    getRecentlyAdded(6),
   ]);
 
   return (
     <>
-      <section className="container py-14">
-        <div className="mx-auto max-w-3xl text-center">
-          <Badge className="mb-4">Career Discovery Directory</Badge>
-          <h1 className="text-balance text-4xl font-bold tracking-tight md:text-6xl">Discover Careers at the World's Best Companies</h1>
-          <p className="mt-4 text-lg text-muted-foreground">Explore Fortune IT and Manufacturing leaders and jump to official careers pages.</p>
-
-          <Card className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 p-4 sm:flex-row">
-            <Input aria-label="Search companies" placeholder="Search companies" className="sm:flex-1" />
-            <Link href="/directory" className="w-full sm:w-auto">
-              <Button className="w-full gap-2" size="lg">
-                Explore Directory <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </Card>
-        </div>
-      </section>
-
-      <section className="container py-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Top IT Companies</h2>
-          <Link href="/directory?category=IT" className="text-sm text-primary hover:underline">View all</Link>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {topIT.map((company) => <CompanyCard key={company.id} company={company} />)}
-        </div>
-      </section>
-
-      <section className="container py-12">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Top Manufacturing Companies</h2>
-          <Link href="/directory?category=Manufacturing" className="text-sm text-primary hover:underline">View all</Link>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {topManufacturing.map((company) => <CompanyCard key={company.id} company={company} />)}
-        </div>
-      </section>
-
-      <section className="container py-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Recently Added Companies</h2>
-          <Link href="/directory" className="text-sm text-primary hover:underline">Browse directory</Link>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {recent.map((company) => <CompanyCard key={company.id} company={company} />)}
-        </div>
-      </section>
-
-      <section className="container py-16">
-        <Card className="p-8">
-          <h3 className="text-2xl font-semibold">Newsletter</h3>
-          <p className="mt-2 text-muted-foreground">Get monthly updates when new companies are added.</p>
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-            <Input placeholder="you@company.com" type="email" className="sm:max-w-sm" />
-            <Button>Notify Me</Button>
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="hero-bg" />
+        <div className="container relative z-10 py-20 md:py-28">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="badge-pill mb-6 inline-flex items-center gap-2">
+              <span className="dot-pulse" />
+              <span>500+ roles updated daily across 50 companies</span>
+            </div>
+            <h1 className="hero-title">
+              Find Your Next
+              <br />
+              <span className="gradient-text">Dream Role</span>
+            </h1>
+            <p className="mt-5 text-lg text-slate-400 md:text-xl">
+              Search by job title or company — direct links to official career pages, no middlemen.
+            </p>
+            <div className="mt-10">
+              <HeroSearch />
+            </div>
           </div>
-          <p className="mt-6 text-xs text-muted-foreground">Analytics placeholder: integrate your preferred analytics provider here.</p>
-        </Card>
+        </div>
+        <div className="hero-grid-overlay" />
+      </section>
+
+      {/* Stats bar */}
+      <section className="border-y border-white/5 bg-white/[0.02]">
+        <div className="container">
+          <div className="grid grid-cols-2 divide-x divide-white/5 md:grid-cols-4">
+            {[
+              { value: "50+", label: "Companies" },
+              { value: "IT & Mfg", label: "Industries" },
+              { value: "100%", label: "Official Links" },
+              { value: "Free", label: "Always" },
+            ].map((stat) => (
+              <div key={stat.label} className="px-6 py-5 text-center">
+                <div className="text-2xl font-bold text-white">{stat.value}</div>
+                <div className="mt-0.5 text-xs text-slate-500">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Top IT Companies */}
+      <section className="container py-16">
+        <div className="section-header">
+          <div>
+            <div className="section-tag">Technology</div>
+            <h2 className="section-title">Top IT Companies</h2>
+          </div>
+          <Link href="/directory?category=IT" className="view-all-link">
+            View all <span>→</span>
+          </Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {topIT.map((company, i) => (
+            <CompanyCard key={company.id} company={company} index={i} />
+          ))}
+        </div>
+      </section>
+
+      {/* Top Manufacturing */}
+      <section className="container py-6 pb-16">
+        <div className="section-header">
+          <div>
+            <div className="section-tag">Industrial</div>
+            <h2 className="section-title">Top Manufacturing Companies</h2>
+          </div>
+          <Link href="/directory?category=Manufacturing" className="view-all-link">
+            View all <span>→</span>
+          </Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {topManufacturing.map((company, i) => (
+            <CompanyCard key={company.id} company={company} index={i} />
+          ))}
+        </div>
+      </section>
+
+      {/* Recently Added */}
+      <section className="container pb-16">
+        <div className="section-header">
+          <div>
+            <div className="section-tag">New</div>
+            <h2 className="section-title">Recently Added</h2>
+          </div>
+          <Link href="/directory" className="view-all-link">
+            Browse all <span>→</span>
+          </Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {recent.map((company, i) => (
+            <CompanyCard key={company.id} company={company} index={i} />
+          ))}
+        </div>
+      </section>
+
+      {/* CTA Newsletter */}
+      <section className="container pb-20">
+        <div className="cta-card">
+          <div className="cta-glow" />
+          <div className="relative z-10 flex flex-col items-center gap-4 text-center">
+            <h3 className="text-2xl font-bold text-white md:text-3xl">
+              Stay ahead of the market
+            </h3>
+            <p className="max-w-md text-slate-400">
+              Get notified when new companies and roles are added to CareerVault.
+            </p>
+            <div className="flex w-full max-w-sm flex-col gap-2 sm:flex-row">
+              <input
+                type="email"
+                placeholder="you@email.com"
+                className="cta-input"
+              />
+              <button className="cta-btn">Notify Me</button>
+            </div>
+          </div>
+        </div>
       </section>
     </>
   );

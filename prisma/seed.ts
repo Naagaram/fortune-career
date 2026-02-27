@@ -1,8 +1,19 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, CompanyCategory } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const companies = [
+type CompanySeed = {
+  name: string;
+  slug: string;
+  industry: string;
+  category: CompanyCategory;
+  headquarters: string;
+  description: string;
+  careersUrl: string;
+  websiteUrl: string;
+};
+
+const companies: CompanySeed[] = [
   { name: "Apple", slug: "apple", industry: "Consumer Electronics", category: "IT", headquarters: "Cupertino, California, USA", description: "Designs consumer hardware, software, and cloud services for global markets.", careersUrl: "https://jobs.apple.com/en-us/search", websiteUrl: "https://www.apple.com" },
   { name: "Microsoft", slug: "microsoft", industry: "Cloud & Software", category: "IT", headquarters: "Redmond, Washington, USA", description: "Builds enterprise software, developer tools, and cloud platforms.", careersUrl: "https://jobs.careers.microsoft.com/global/en/search", websiteUrl: "https://www.microsoft.com" },
   { name: "Alphabet", slug: "alphabet", industry: "Internet Services", category: "IT", headquarters: "Mountain View, California, USA", description: "Parent company of Google with products in search, cloud, and AI.", careersUrl: "https://www.google.com/about/careers/applications/jobs/results", websiteUrl: "https://abc.xyz" },
@@ -53,7 +64,7 @@ const companies = [
   { name: "LG Electronics", slug: "lg-electronics", industry: "Electronics Manufacturing", category: "Manufacturing", headquarters: "Seoul, South Korea", description: "Builds consumer electronics, appliances, and mobility components.", careersUrl: "https://www.lg.com/global/careers", websiteUrl: "https://www.lg.com" },
   { name: "Panasonic", slug: "panasonic", industry: "Electronics Manufacturing", category: "Manufacturing", headquarters: "Osaka, Japan", description: "Manufactures electronics, battery, and industrial solutions.", careersUrl: "https://careers.na.panasonic.com", websiteUrl: "https://www.panasonic.com" },
   { name: "Bosch", slug: "bosch", industry: "Engineering & Manufacturing", category: "Manufacturing", headquarters: "Gerlingen, Germany", description: "Produces mobility, industrial, and consumer technology solutions.", careersUrl: "https://jobs.bosch.com", websiteUrl: "https://www.bosch.com" }
-] as const;
+];
 
 async function main() {
   await prisma.company.createMany({
