@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CompanyCategory {
+  IT
+  Manufacturing
+}
+
+model Company {
+  id           String          @id @default(uuid())
+  name         String
+  slug         String          @unique
+  industry     String
+  category     CompanyCategory
+  headquarters String
+  description  String
+  careersUrl   String
+  websiteUrl   String
+  createdAt    DateTime        @default(now())
+
+  @@index([category])
+  @@index([name])
+  @@index([createdAt])
+}
